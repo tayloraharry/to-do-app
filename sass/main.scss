@@ -1,4 +1,4 @@
-.editingTaskBorder {
+.editMode {
     border: 1px solid tomato;
     padding: .4em .1em;
     border-radius: .2em;
@@ -7,4 +7,9 @@
 ul {
     list-style-type: none;
     padding: 0;
+}
+
+
+.hidden {
+  display: none;
 }

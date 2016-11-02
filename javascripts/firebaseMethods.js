@@ -2,11 +2,11 @@
 
 var FbAPI = (function(oldFirebase) {
 
-  oldFirebase.getTodos = function(apiKeys) {
+  oldFirebase.getTodos = function(apiKeys, uid) {
     return new Promise((resolve, reject)=> {
       $.ajax({
         method: 'GET',
-        url: `${apiKeys.databaseURL}/items.json`
+        url: `${apiKeys.databaseURL}/items.json?orderBy="uid"&equalTo="${uid}"`
       }).then((response)=>{
         //console.log("response", response);
         let items = [];
@@ -70,6 +70,23 @@ var FbAPI = (function(oldFirebase) {
      });
    });
  };
+
+   oldFirebase.editTodo = function(apiKeys, itemId, editedItem) {
+    return new Promise((resolve, reject)=> {
+      $.ajax({
+        method: 'PUT',
+        url: `${apiKeys.databaseURL}/items/${itemId}.json`,
+        data: JSON.stringify(editedItem),
+        dataType: 'json'
+      }).then((response)=>{
+        resolve(response);
+        //console.log("response from POST", response);
+      }, (error) => {
+        reject(error);
+        //console.log(error);
+      });
+    });
+  };
 
   return oldFirebase;
 })(FbAPI || {});

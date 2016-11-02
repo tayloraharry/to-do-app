@@ -1,28 +1,31 @@
 "use strict";
 
 let apiKeys = {};
+let uid = {};
+
 function putTodoInDOM(){
-  FbAPI.getTodos(apiKeys).then(function(items){
+  FbAPI.getTodos(apiKeys, uid).then(function(items){
     //console.log("itmems from FB", items);
     $("#incomplete").html("");
     $("#done-items").html("");
     items.forEach(function(item){
     if(item.isCompleted === false) {
     let newListItem = `<li class="ui-state-default">`;
-    newListItem+=`<div class="checkbox">`;
+    newListItem+=`<div class="checkbox" data-fbid="${item.id}" data-completed="${item.isCompleted}">`;
+    newListItem+=`<input class="hidden inputTask" value=${item.task}>`
     newListItem+=`<label>${item.task}</label>`;
-    newListItem+=`<button class="remove-item btn btn-danger btn-default btn-xs pull-right"><span class="remove-item glyphicon glyphicon-remove"></span></button>`;
-    newListItem+=`<button class="edit-item btn btn-info btn-default btn-xs pull-right"><span class="glyphicon glyphicon-edit"></button>`;
-    newListItem+=`<button class="complete-item btn btn-success btn-default btn-xs pull-right"><span class="glyphicon glyphicon-ok"></span></button>`;
+    newListItem+=`<button class="delete remove-item btn btn-danger btn-default btn-xs pull-right" data-fbid="${item.id}"><span class="remove-item glyphicon glyphicon-remove"></span></button>`;
+    newListItem+=`<button class="edit edit-item btn btn-info btn-default btn-xs pull-right" data-fbid="${item.id}"><span class="glyphicon glyphicon-edit"></button>`;
+    newListItem+=`<button class="complete complete-item btn btn-success btn-default btn-xs pull-right" data-fbid="${item.id}"><span class="glyphicon glyphicon-ok"></span></button>`;
     newListItem+=`</div>`;
     newListItem+=`</li>`;
     $("#incomplete").append(newListItem);
     //apend to list
     } else {
     let newListItem = `<li class="ui-state-default">`
-    newListItem+=`<div class="checkbox">`;
+    newListItem+=`<div class="checkbox" data-fbid="${item.id}" data-completed="${item.isCompleted}">`;
     newListItem+=`<label>${item.task}</label>`;
-    newListItem+=`<button class="delete complete-item btn btn btn-default btn-xs pull-right" data-fbid="${item.id}"><span class="glyphicon glyphicon-remove"></span>`;
+    newListItem+=`<button class="complete complete-item btn btn btn-default btn-xs pull-right" data-fbid="${item.id}"><span class="glyphicon glyphicon-remove"></span>`;
     newListItem+=`</button></div></li>`;
     newListItem+=`</div>`;
     newListItem+=`</li>`;
@@ -48,8 +51,8 @@ $(document).ready(function(){
     console.log("keys", keys);
     apiKeys = keys;
       firebase.initializeApp(apiKeys);
-      putTodoInDOM();
   });
+
   $("ul").on("click", ".delete", function(){
    let itemId = $(this).data("fbid");
    console.log(itemId);
@@ -57,6 +60,95 @@ $(document).ready(function(){
       putTodoInDOM();
    });
   });
+
+  $("ul").on('click', ".edit", function(){
+    let itemId = $(this).data("fbid");
+    let parent = $(this).closest("li");
+    let labelUpdate =$(this).parent().children(':first-child');
+    if(!parent.hasClass("editMode")){
+      labelUpdate.removeClass("hidden");
+      parent.addClass("editMode");
+      $(this).parent().children(":nth-child(2)").addClass("hidden");
+    } else {
+      labelUpdate.addClass("hidden");
+      let editedItem = {
+        "task":labelUpdate.val(),
+        "isCompleted": false
+      }
+      FbAPI.editTodo(apiKeys, itemId, editedItem).then(function(response){
+        parent.removeClass("editMode");
+        putTodoInDOM();
+
+      })
+    }
+
+
+  })
+
+
+  $("ul").on('click', '.complete', function() {
+    let updateIsCompleted = $(this).parent().data("completed");
+    let itemId = $(this).parent().data("fbid");
+    let task = $(this).parent().children("label:first-of-type").html();
+    let editedItem = {
+      "task": task,
+      "isCompleted": !updateIsCompleted
+    }
+    FbAPI.editTodo(apiKeys, itemId, editedItem).then(function(response){
+    putTodoInDOM();
+
+    })
+
+  })
+
+
+$("#registerButton").on('click', function(){
+  let user = {
+    email: $("#inputEmail").val(),
+    password: $("#inputPassword").val()
+  }
+  FbAPI.registerUser(user).then(function(loginResponse){
+    return FbAPI.loginUser(user);
+  }).then(function(loginResponse){
+    uid = loginResponse.uid;
+    putTodoInDOM();
+    $("#login-container").addClass("hidden");
+    $("#to-do-container").removeClass("hidden");
+  });
+})
+
+$("#loginButton").on('click', function(){
+  let user = {
+    email: $("#inputEmail").val(),
+    password: $("#inputPassword").val()
+  }
+  FbAPI.loginUser(user).then(function(loginResponse){
+    uid = loginResponse.uid;
+    putTodoInDOM();
+    $("#login-container").addClass("hidden");
+    $("#to-do-container").removeClass("hidden");
+
+  })
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 });
 
 
