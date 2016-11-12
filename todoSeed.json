@@ -13,7 +13,13 @@
     "item2":{
       "task":"do the dishes",
       "isCompleted":"false",
-      "uid":""
+      "uid":"cKLvIdhTOXgUEqcAZJBWqeX97iZ2"
+    }
+  },
+  "users": {
+    "user1": {
+      "username": "a",
+      "uid":"cKLvIdhTOXgUEqcAZJBWqeX97iZ2"
     }
   }
 }

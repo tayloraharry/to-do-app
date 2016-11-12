@@ -13,10 +13,10 @@ var FbAPI = (function(oldFirebase) {
         Object.keys(response).forEach(function(key){
           response[key].id = key;
           items.push(response[key]);
-        })
+        });
         resolve(items);
       }, (error) => {
-        reject(error)
+        reject(error);
         console.log(error);
       });
     });
@@ -47,9 +47,9 @@ var FbAPI = (function(oldFirebase) {
       }).then((response)=>{
         //console.log("response from Delte", response);
         resolve(response);
-        console.log("attmped delte")
+        console.log("attmped delte");
       }, (error) => {
-        reject(error)
+        reject(error);
         //console.log(error);
       });
     });

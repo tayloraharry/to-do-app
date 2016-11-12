@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>TO-DO</title>
-  <link rel="stylesheet" type="text/css" href="/lib/bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="styles/main.css">
 </head>
 <body>
@@ -15,6 +15,7 @@
         <button class="btn btn-lg btn-primary col-xs-6" id="registerButton">Register</button>
     </div>
 <div class="container hidden" id="to-do-container">
+    <div class="col-xs-offset-2 col-xs-8" id="logout-container"></div>
     <div class="row">
         <div class="col-md-6">
             <div class="todolist not-done">
@@ -37,10 +38,11 @@
     </div>
 </div>
 <script src="https://www.gstatic.com/firebasejs/3.5.2/firebase.js"></script>
-<script type="text/javascript" src="/lib/bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="javascripts/firebase.js"></script>
 <script type="text/javascript" src="javascripts/firebaseMethods.js"></script>
 <script type="text/javascript" src="javascripts/firebaseAuth.js"></script>
+<script type="text/javascript" src="javascripts/firebaseUser.js"></script>
 <script type="text/javascript" src="javascripts/main.js"></script>
 </body>
 </html>
